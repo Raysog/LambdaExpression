@@ -24,14 +24,7 @@ public class Tester {
 
         ShortPrintable shortPrint = (c) -> System.out.println("Краткое название: " + c.getNameShort() + "\nДата основания:  " + c.getEgrulDate().format(DateTimeFormatter.ofPattern("d/MM/uuuu")));
         jfl.getCompanies().forEach(shortPrint::shortPrint);
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        //src/main/resources/data.json
+        
 
         jfl.getCompanies().stream().forEach(company -> {
             count = 0;
