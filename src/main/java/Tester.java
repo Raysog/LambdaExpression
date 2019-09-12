@@ -1,6 +1,3 @@
-/**
- * Created by Ivan on 09.09.2019.
- */
 import org.json.simple.parser.ParseException;
 
 import java.io.BufferedReader;
@@ -20,31 +17,34 @@ public class Tester {
 
     private static int count = 0;
     private static boolean flagDate = true;
+    private static boolean flagCourse = true;
 
     public static void main(String[] args) throws IOException, ParseException {
-        System.out.println(new File("").getAbsoluteFile());
-        System.out.println(new File("").getPath());
-        System.out.println(new File("").getCanonicalPath());
         JSONFileLoader jfl = new JSONFileLoader();
 
         ShortPrintable shortPrint = (c) -> System.out.println("Краткое название: " + c.getNameShort() + "\nДата основания:  " + c.getEgrulDate().format(DateTimeFormatter.ofPattern("d/MM/uuuu")));
         jfl.getCompanies().forEach(shortPrint::shortPrint);
         System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        //src/main/resources/data.json
 
         jfl.getCompanies().stream().forEach(company -> {
             count = 0;
+            System.out.println("Просроченные ценные бумаги компании " + company.getNameShort() + ":");
             company.getSecurities().stream().filter(security ->
                     security.getDateTo().isBefore(LocalDate.now())).forEach(security -> {
-                System.out.println("code: " + security.getCode() + "\n" +
-                        "dateTo: " + security.getDateTo() + "\n" +
-                        "companyFullName: " + company.getNameFull() + "\n");
+                System.out.println("\tcode: " + security.getCode() + "\n" +
+                        "\t\tdateTo: " + security.getDateTo() + "\n" +
+                        "\t\tcompanyFullName: " + company.getNameFull());
                 count++;
             });
-            System.out.println("Количество просроченных ценных бумаг: " + count);
+            System.out.println("Всего у компании "+ company.getNameShort()+ " " + count  + " просроченных ценных бумаг\n");
         });
-
-
-
 
         DateTimeFormatter f = DateTimeFormatter.ofPattern("d/uuuu/MM");
         DateTimeFormatter d = DateTimeFormatter.ofPattern("uuuu/dd/MM");
@@ -76,35 +76,24 @@ public class Tester {
                 );
             }
         }
-
-        List<String> courses = new ArrayList<>();
-        courses.add("EU");
-        courses.add("USD");
-        courses.add("RUB");
-        boolean flagCourse = true;
+        
 
         while (flagCourse) {
             System.out.println("Enter course: ");
             InputStreamReader isr = new InputStreamReader(System.in);
             BufferedReader bf = new BufferedReader(isr);
             String enteredCourse = bf.readLine();
-            if (courses.stream().filter(course -> course.equals(enteredCourse)).count() == 0) {
-                System.out.println("Курс указан неверно!\nДоступные курсы:");
-                courses.stream().forEach(course ->
-                        System.out.println(course)
-                );
-            } else {
-                courses.stream().filter(course -> course.equals(enteredCourse)).forEach(course ->
-                        jfl.getCompanies().stream().forEach(company ->
-                                company.getSecurities().stream().filter(security ->
-                                        security.getCurrency().getCode().equals(enteredCourse)).forEach(security -> {
-                                            System.out.println("id = " + security.getId() + " code = " + security.getCode());
-                                        }
-                                )
-                        )
-                );
-                flagCourse = false;
-            }
+            jfl.getCompanies().stream().forEach(company -> 
+            		company.getSecurities().stream().filter(security -> 
+            				security.getCurrency().getCode().equals(enteredCourse)).forEach(security -> {
+            					flagCourse = false;	
+            					System.out.println("id = " + security.getId() + " code = " + security.getCode());
+            				})
+            );
+            if(flagCourse) {
+            	System.out.println("Курс указан неверно!");
+            } 
+            
         }
     }
 }
